@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=KQuickNote
+GenericName=Nota Rápida en Esquina (Quick Note)
+Comment=Nota rápida flotante en esquina estilo macOS Quick Note con Markdown y sincronización Kiri RAG para KDE Plasma 6 Wayland
+Exec=kquicknote
+Icon=knotes
+Type=Application
+Categories=Utility;TextEditor;KDE;Qt;
+StartupNotify=false
