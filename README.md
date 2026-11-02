@@ -1,14 +1,13 @@
-# KQuickNote — Nota Rápida en Esquina para KDE Plasma 6.8 + Wayland
+# KQuickNote — Nota Rápida para KDE Plasma 6.8 + Wayland
 
-**KQuickNote** replica la experiencia de **macOS Quick Note** (Nota Rápida en Esquina / Hot Corner) de forma nativa en **KDE Plasma 6.8 sobre Wayland** con estética **Liquid Glass** e integración directa con el índice de conocimiento local (**RAG**) de **Kiri**.
+**KQuickNote** ofrece una experiencia ágil de notas rápidas de forma nativa en **KDE Plasma 6.8 sobre Wayland** con diseño **Kirigami / Breeze** e integración directa con el índice de conocimiento local (**RAG**) de **Kiri**.
 
 ---
 
 ## Características principales
 
-- **Overlay Wayland en esquina inferior derecha (`LayerShellQt`)**:
-  - Anclado a `AnchorBottom | AnchorRight` con márgenes `(0, 0, 24, 24)` y estética translúcida **Liquid Glass**.
-  - Modo fijado (`LayerOverlay`) o flotante (`LayerTop`) conmutable desde la barra superior.
+- **Ventana nativa KWin Breeze (`Kirigami.ApplicationWindow`)**:
+  - Decoraciones y barra de título nativas del sistema, respetando los botones y esquemas configurados en Preferencias del Sistema.
 - **Guardado automático en Markdown (`~/Documentos/QuickNotes/`)**:
   - Cada nota se guarda instantáneamente como `<id>.md` mientras escribes.
   - El título de la nota se extrae automáticamente del primer encabezado `# Título` o primera línea con texto.
@@ -20,7 +19,7 @@
 - **Atajos globales (`KF6::GlobalAccel`) y servicio D-Bus (`org.cesar.kquicknote`)**:
   - `Meta+Alt+N`: Mostrar / ocultar la Nota Rápida.
   - `Meta+Shift+N`: Crear nueva nota rápida capturando la selección actual.
-  - Interfaz D-Bus en `org.cesar.kquicknote` (`/QuickNote`) con métodos `Toggle()`, `Show()`, `Hide()` y `NewNoteWithSelection()` para enlazar con **Bordes de pantalla (Hot Corners)** de KWin.
+  - Interfaz D-Bus en `org.cesar.kquicknote` (`/QuickNote`) con métodos `Toggle()`, `Show()`, `Hide()` y `NewNoteWithSelection()`.
 
 ---
 
@@ -29,7 +28,6 @@
 - KDE Plasma 6.8+ (Wayland)
 - Qt 6.7+ (`Core`, `Gui`, `Widgets`, `Qml`, `Quick`, `QuickControls2`, `DBus`, `Test`)
 - KDE Frameworks 6 (`ECM`, `CoreAddons`, `I18n`, `GlobalAccel`, `Kirigami`)
-- `LayerShellQt`
 - Opcional: `wl-clipboard` (`wl-paste`) como respaldo para captura de selección en Wayland.
 
 ---
@@ -46,22 +44,15 @@ kbuildsycoca6 >/dev/null 2>&1
 
 ---
 
-## Uso y configuración de Esquina Activa (Hot Corner)
+## Uso
 
 1. **Lanzar la aplicación**:
    ```bash
    ~/.local/bin/kquicknote &
    ```
    Si `kquicknote` ya está en ejecución, volver a ejecutar `kquicknote` invoca `Toggle()` automáticamente por D-Bus.
-2. **Invocar mediante D-Bus o Esquina Activa de KWin**:
+2. **Invocar mediante D-Bus**:
    ```bash
    qdbus6 org.cesar.kquicknote /QuickNote org.cesar.kquicknote.Toggle
    qdbus6 org.cesar.kquicknote /QuickNote org.cesar.kquicknote.NewNoteWithSelection
    ```
-   Puedes asociar este comando o el lanzador **KQuickNote** a una esquina de pantalla o atajo personalizado en *Preferencias del Sistema → Entrada y salida → Bordes de pantalla / Atajos*.
-
----
-
-## Limitaciones conocidas
-
-- Diseñado exclusivamente para sesiones **Wayland** con compositores compatibles con `wlr-layer-shell` (como KWin en KDE Plasma 6).

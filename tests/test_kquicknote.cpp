@@ -28,7 +28,7 @@ private Q_SLOTS:
         QCOMPARE(ctrl.notes().size(), 1);
         QVERIFY(!ctrl.currentNoteId().isEmpty());
 
-        ctrl.createNote(QStringLiteral("# Arquitectura Plasma 6.8\nNotas sobre Wayland LayerShell."));
+        ctrl.createNote(QStringLiteral("# Arquitectura Plasma 6.8\nNotas sobre integración nativa Breeze."));
         QCOMPARE(ctrl.notes().size(), 2);
         QCOMPARE(ctrl.currentTitle(), QStringLiteral("Arquitectura Plasma 6.8"));
         QVERIFY(ctrl.wordCount() >= 6);
