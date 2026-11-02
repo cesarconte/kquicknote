@@ -6,14 +6,12 @@
 #include "quicknotecontroller.h"
 
 #include <KGlobalAccel>
-#include <LayerShellQt/Window>
 
 #include <QAction>
 #include <QApplication>
 #include <QDBusConnection>
 #include <QDBusInterface>
 #include <QKeySequence>
-#include <QMargins>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
@@ -54,7 +52,7 @@ int main(int argc, char *argv[])
     // Register global shortcut Meta+Alt+N via KF6 GlobalAccel
     auto *toggleAction = new QAction(&app);
     toggleAction->setObjectName(QStringLiteral("toggle_quick_note"));
-    toggleAction->setText(QStringLiteral("Mostrar/Ocultar Nota Rápida en Esquina"));
+    toggleAction->setText(QStringLiteral("Mostrar/Ocultar Nota Rápida"));
     KGlobalAccel::setGlobalShortcut(
         toggleAction,
         QKeySequence(Qt::META | Qt::ALT | Qt::Key_N));
@@ -77,21 +75,15 @@ int main(int argc, char *argv[])
     }
 
     if (auto *win = qobject_cast<QQuickWindow *>(engine.rootObjects().first())) {
-        if (auto *layerWin = LayerShellQt::Window::get(win)) {
-            layerWin->setLayer(LayerShellQt::Window::LayerOverlay);
-            layerWin->setAnchors(LayerShellQt::Window::Anchors(
-                LayerShellQt::Window::AnchorBottom | LayerShellQt::Window::AnchorRight));
-            layerWin->setMargins(QMargins(0, 0, 24, 24));
-            layerWin->setExclusiveZone(0);
-            layerWin->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityOnDemand);
-            layerWin->setScope(QStringLiteral("kquicknote"));
-
-            QObject::connect(&controller, &QuickNoteController::pinnedChanged, win, [layerWin, &controller]() {
-                layerWin->setLayer(controller.isPinned()
-                                       ? LayerShellQt::Window::LayerOverlay
-                                       : LayerShellQt::Window::LayerTop);
-            });
-        }
+        QObject::connect(&controller, &QuickNoteController::visibleChanged, win, [win, &controller]() {
+            if (controller.isVisible()) {
+                win->show();
+                win->raise();
+                win->requestActivate();
+            } else {
+                win->hide();
+            }
+        });
     }
 
     return app.exec();
