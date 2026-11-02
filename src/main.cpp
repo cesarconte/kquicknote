@@ -6,6 +6,8 @@
 #include "quicknotecontroller.h"
 
 #include <KGlobalAccel>
+#include <KLocalizedContext>
+#include <KLocalizedString>
 
 #include <QAction>
 #include <QApplication>
@@ -67,6 +69,7 @@ int main(int argc, char *argv[])
     QObject::connect(captureAction, &QAction::triggered, &controller, &QuickNoteController::NewNoteWithSelection);
 
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.rootContext()->setContextProperty(QStringLiteral("QuickNote"), &controller);
     engine.load(QUrl(QStringLiteral("qrc:/org/cesar/kquicknote/qml/main.qml")));
 
