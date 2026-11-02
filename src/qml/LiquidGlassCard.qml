@@ -21,11 +21,11 @@ Rectangle {
 
     // Respects KDE Plasma / Breeze theme natively (supports both light and dark themes)
     color: {
-        if (isHighlighted) {
-            return Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.18);
-        }
         if (glassStyle === "shell") {
             return Kirigami.Theme.backgroundColor;
+        }
+        if (isHighlighted) {
+            return Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.18);
         }
         if (glassStyle === "recessed") {
             return Kirigami.Theme.alternateBackgroundColor;
@@ -35,7 +35,7 @@ Rectangle {
 
     border.width: 1
     border.color: {
-        if (isHighlighted) {
+        if (glassStyle !== "shell" && isHighlighted) {
             return Kirigami.Theme.highlightColor;
         }
         return Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.16);

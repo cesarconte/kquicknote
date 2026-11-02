@@ -23,8 +23,8 @@ Window {
         id: shellCard
         anchors.fill: parent
         glassStyle: "shell"
-        glassOpacity: 0.90
-        isHighlighted: typeof QuickNote !== "undefined" && QuickNote ? QuickNote.pinned : false
+        glassOpacity: 1.0
+        isHighlighted: false
 
         ColumnLayout {
             anchors.fill: parent
@@ -40,13 +40,13 @@ Window {
                     source: "view-pim-notes"
                     Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
                     Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium
-                    color: "#00e5ff"
+                    color: Kirigami.Theme.highlightColor
                 }
 
                 QQC2.Label {
                     Layout.fillWidth: true
                     text: typeof QuickNote !== "undefined" && QuickNote ? QuickNote.currentTitle : "Nota rápida"
-                    color: "#ffffff"
+                    color: Kirigami.Theme.textColor
                     font.pixelSize: 13
                     font.bold: true
                     elide: Text.ElideRight
@@ -186,8 +186,8 @@ Window {
                         text: typeof QuickNote !== "undefined" && QuickNote ? QuickNote.currentContent : ""
                         wrapMode: TextEdit.Wrap
                         selectByMouse: true
-                        color: "#f4f7fa"
-                        placeholderTextColor: Qt.rgba(0.75, 0.80, 0.88, 0.55)
+                        color: Kirigami.Theme.textColor
+                        placeholderTextColor: Kirigami.Theme.disabledTextColor
                         font.pixelSize: 13
                         background: null
 
@@ -209,7 +209,7 @@ Window {
                     width: 7
                     height: 7
                     radius: 3.5
-                    color: "#00e5ff"
+                    color: Kirigami.Theme.positiveTextColor
                 }
 
                 QQC2.Label {
@@ -217,7 +217,7 @@ Window {
                     text: typeof QuickNote !== "undefined" && QuickNote && QuickNote.statusMessage.length > 0
                         ? QuickNote.statusMessage
                         : "Guardado automático en Markdown"
-                    color: Qt.rgba(0.82, 0.88, 0.95, 0.78)
+                    color: Kirigami.Theme.disabledTextColor
                     font.pixelSize: 11
                     elide: Text.ElideRight
                 }
@@ -228,7 +228,7 @@ Window {
                         const chars = typeof QuickNote !== "undefined" && QuickNote ? QuickNote.characterCount : 0;
                         return words + " pal · " + chars + " car";
                     }
-                    color: Qt.rgba(0.75, 0.82, 0.90, 0.68)
+                    color: Kirigami.Theme.disabledTextColor
                     font.pixelSize: 11
                 }
             }
