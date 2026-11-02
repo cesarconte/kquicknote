@@ -10,79 +10,22 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 
-Window {
+Kirigami.ApplicationWindow {
     id: root
     width: 380
     height: 440
     visible: typeof QuickNote !== "undefined" && QuickNote ? QuickNote.visible : true
-    color: "transparent"
-    flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
-    title: "KQuickNote"
+    title: i18n("KQuickNote — Nota Rápida")
 
-    LiquidGlassCard {
-        id: shellCard
+    ColumnLayout {
         anchors.fill: parent
-        glassStyle: "shell"
-        glassOpacity: 1.0
-        isHighlighted: false
+        anchors.margins: Kirigami.Units.largeSpacing
+        spacing: Kirigami.Units.mediumSpacing
 
-        ColumnLayout {
-            anchors.fill: parent
-            anchors.margins: Kirigami.Units.largeSpacing
-            spacing: Kirigami.Units.mediumSpacing
-
-            // Top Header: Title badge + Window controls (Pin & Close)
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Kirigami.Units.smallSpacing
-
-                Kirigami.Icon {
-                    source: "view-pim-notes"
-                    Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
-                    Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium
-                    color: Kirigami.Theme.highlightColor
-                }
-
-                QQC2.Label {
-                    Layout.fillWidth: true
-                    text: typeof QuickNote !== "undefined" && QuickNote ? QuickNote.currentTitle : "Nota rápida"
-                    color: Kirigami.Theme.textColor
-                    font.pixelSize: 13
-                    font.bold: true
-                    elide: Text.ElideRight
-                }
-
-                QQC2.ToolButton {
-                    icon.name: "window-pin"
-                    checkable: true
-                    checked: typeof QuickNote !== "undefined" && QuickNote ? QuickNote.pinned : true
-                    display: QQC2.AbstractButton.IconOnly
-                    QQC2.ToolTip.visible: hovered
-                    QQC2.ToolTip.text: checked ? "Fijada en esquina (Meta+Alt+N)" : "Fijar siempre visible"
-                    onClicked: {
-                        if (typeof QuickNote !== "undefined" && QuickNote) {
-                            QuickNote.pinned = !QuickNote.pinned;
-                        }
-                    }
-                }
-
-                QQC2.ToolButton {
-                    icon.name: "window-close"
-                    display: QQC2.AbstractButton.IconOnly
-                    QQC2.ToolTip.visible: hovered
-                    QQC2.ToolTip.text: "Ocultar nota rápida (Meta+Alt+N)"
-                    onClicked: {
-                        if (typeof QuickNote !== "undefined" && QuickNote) {
-                            QuickNote.hideOverlay();
-                        }
-                    }
-                }
-            }
-
-            // Action Toolbar: Note Selector + Quick Actions
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Kirigami.Units.smallSpacing
+        // Action Toolbar: Note Selector + Quick Actions
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: Kirigami.Units.smallSpacing
 
                 QQC2.ComboBox {
                     id: noteSelector
@@ -233,5 +176,4 @@ Window {
                 }
             }
         }
-    }
 }
