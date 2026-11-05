@@ -20,6 +20,7 @@ class QuickNoteController : public QObject
     Q_PROPERTY(QString currentContent READ currentContent NOTIFY currentContentChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(bool pinned READ isPinned WRITE setPinned NOTIFY pinnedChanged)
+    Q_PROPERTY(bool hotCornerEnabled READ isHotCornerEnabled WRITE setHotCornerEnabled NOTIFY hotCornerEnabledChanged)
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
     Q_PROPERTY(int characterCount READ characterCount NOTIFY currentContentChanged)
     Q_PROPERTY(int wordCount READ wordCount NOTIFY currentContentChanged)
@@ -35,6 +36,8 @@ public:
     void setVisible(bool visible);
     bool isPinned() const;
     void setPinned(bool pinned);
+    bool isHotCornerEnabled() const;
+    void setHotCornerEnabled(bool enabled);
     QString statusMessage() const;
     int characterCount() const;
     int wordCount() const;
@@ -69,6 +72,7 @@ Q_SIGNALS:
     void currentContentChanged();
     void visibleChanged();
     void pinnedChanged();
+    void hotCornerEnabledChanged();
     void statusMessageChanged();
 
 private:
@@ -86,5 +90,6 @@ private:
     QString m_currentContent;
     bool m_visible = true;
     bool m_pinned = true;
+    bool m_hotCornerEnabled = true;
     QString m_statusMessage;
 };

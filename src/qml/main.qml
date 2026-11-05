@@ -12,6 +12,7 @@ import org.kde.kirigami as Kirigami
 
 Kirigami.ApplicationWindow {
     id: root
+    objectName: "quickNoteMainWindow"
     width: 440
     height: 520
     minimumWidth: 320

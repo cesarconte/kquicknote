@@ -98,6 +98,22 @@ void QuickNoteController::setPinned(bool pinned)
     Q_EMIT pinnedChanged();
 }
 
+bool QuickNoteController::isHotCornerEnabled() const
+{
+    return m_hotCornerEnabled;
+}
+
+void QuickNoteController::setHotCornerEnabled(bool enabled)
+{
+    if (m_hotCornerEnabled == enabled) {
+        return;
+    }
+    m_hotCornerEnabled = enabled;
+    setStatusMessage(m_hotCornerEnabled ? QStringLiteral("Esquina activa habilitada")
+                                        : QStringLiteral("Esquina activa deshabilitada"));
+    Q_EMIT hotCornerEnabledChanged();
+}
+
 QString QuickNoteController::statusMessage() const
 {
     return m_statusMessage;

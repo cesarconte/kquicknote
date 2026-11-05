@@ -26,6 +26,7 @@ target_link_libraries(kquicknote PRIVATE
     Qt6::QuickControls2
     KF6::GlobalAccel
     KF6::I18n
+    KF6::I18nQml
 )
 
 install(TARGETS kquicknote DESTINATION ${KDE_INSTALL_BINDIR})

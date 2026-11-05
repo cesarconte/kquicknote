@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/org/cesar/kquicknote">
         <file>qml/main.qml</file>
+        <file>qml/CornerPeeker.qml</file>
     </qresource>
 </RCC>

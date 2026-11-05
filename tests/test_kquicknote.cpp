@@ -10,6 +10,7 @@
 #include <QQmlComponent>
 #include <QQmlContext>
 #include <QQmlEngine>
+#include <QSignalSpy>
 #include <QTemporaryDir>
 #include <QTest>
 
@@ -142,6 +143,27 @@ private Q_SLOTS:
 
         QQmlComponent comp(&engine, QUrl(QStringLiteral("qrc:/org/cesar/kquicknote/qml/main.qml")));
         QVERIFY2(!comp.isError(), qPrintable(comp.errorString()));
+
+        QQmlComponent peekerComp(&engine, QUrl(QStringLiteral("qrc:/org/cesar/kquicknote/qml/CornerPeeker.qml")));
+        QVERIFY2(!peekerComp.isError(), qPrintable(peekerComp.errorString()));
+    }
+
+    void testHotCornerState()
+    {
+        QTemporaryDir tempDir;
+        QVERIFY(tempDir.isValid());
+        QuickNoteController ctrl(tempDir.path());
+
+        QVERIFY(ctrl.isHotCornerEnabled());
+        QSignalSpy spy(&ctrl, &QuickNoteController::hotCornerEnabledChanged);
+
+        ctrl.setHotCornerEnabled(false);
+        QCOMPARE(spy.count(), 1);
+        QVERIFY(!ctrl.isHotCornerEnabled());
+
+        ctrl.setHotCornerEnabled(true);
+        QCOMPARE(spy.count(), 2);
+        QVERIFY(ctrl.isHotCornerEnabled());
     }
 };
 
