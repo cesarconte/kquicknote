@@ -139,6 +139,7 @@ private Q_SLOTS:
         QuickNoteController ctrl(tempDir.path());
 
         QQmlEngine engine;
+        engine.addImportPath(QStringLiteral("/home/cesar/.local/lib/qt6/qml"));
         engine.rootContext()->setContextProperty(QStringLiteral("QuickNote"), &ctrl);
 
         QQmlComponent comp(&engine, QUrl(QStringLiteral("qrc:/org/cesar/kquicknote/qml/main.qml")));
@@ -146,6 +147,43 @@ private Q_SLOTS:
 
         QQmlComponent peekerComp(&engine, QUrl(QStringLiteral("qrc:/org/cesar/kquicknote/qml/CornerPeeker.qml")));
         QVERIFY2(!peekerComp.isError(), qPrintable(peekerComp.errorString()));
+    }
+
+    void testGoldenGateFeatures()
+    {
+        QTemporaryDir tempDir;
+        QTemporaryDir exportDir;
+        QVERIFY(tempDir.isValid());
+        QVERIFY(exportDir.isValid());
+
+        QuickNoteController ctrl(tempDir.path());
+        ctrl.updateCurrentContent(QStringLiteral("# macOS 27 Golden Gate Notes\nSección 1"));
+
+        // Horizontal divider insertion
+        ctrl.insertHorizontalDivider();
+        QVERIFY(ctrl.currentContent().contains(QStringLiteral("\n\n---\n\n")));
+
+        // Duplicate note
+        const int beforeCount = ctrl.notes().size();
+        ctrl.duplicateCurrentNote();
+        QCOMPARE(ctrl.notes().size(), beforeCount + 1);
+        QVERIFY(ctrl.currentContent().contains(QStringLiteral("macOS 27 Golden Gate Notes")));
+        QCOMPARE(ctrl.statusMessage(), QStringLiteral("Nota duplicada"));
+
+        // Export to Markdown
+        const QString mdExportPath = QDir(exportDir.path()).filePath(QStringLiteral("exported.md"));
+        QVERIFY(ctrl.exportToMarkdown(mdExportPath));
+        QVERIFY(QFile::exists(mdExportPath));
+
+        // Import Markdown file
+        QVERIFY(ctrl.importMarkdownFile(mdExportPath));
+        QCOMPARE(ctrl.notes().size(), beforeCount + 2);
+
+        // Export to PDF
+        const QString pdfExportPath = QDir(exportDir.path()).filePath(QStringLiteral("exported.pdf"));
+        QVERIFY(ctrl.exportToPdf(pdfExportPath));
+        QVERIFY(QFile::exists(pdfExportPath));
+        QVERIFY(QFileInfo(pdfExportPath).size() > 0);
     }
 
     void testHotCornerState()

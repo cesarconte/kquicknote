@@ -19,6 +19,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
+#include <QTimer>
 
 int main(int argc, char *argv[])
 {
@@ -47,6 +48,11 @@ int main(int argc, char *argv[])
                               QStringLiteral("Crear una nueva nota capturando la selección actual"));
     parser.addOption(newOpt);
 
+    QCommandLineOption screenshotOpt(QStringLiteral("screenshot"),
+                                     QStringLiteral("Capturar imagen de la ventana y salir"),
+                                     QStringLiteral("path"));
+    parser.addOption(screenshotOpt);
+
     parser.process(app);
 
     const QString serviceName = QStringLiteral("org.cesar.kquicknote");
@@ -54,7 +60,7 @@ int main(int argc, char *argv[])
     const QString interfaceName = QStringLiteral("org.cesar.kquicknote");
 
     QDBusConnection bus = QDBusConnection::sessionBus();
-    if (bus.isConnected() && !bus.registerService(serviceName)) {
+    if (!parser.isSet(screenshotOpt) && bus.isConnected() && !bus.registerService(serviceName)) {
         // Otra instancia ya se está ejecutando: reenviar comando por D-Bus y salir
         QDBusInterface iface(serviceName, objectPath, interfaceName, bus);
         if (iface.isValid()) {
@@ -87,6 +93,7 @@ int main(int argc, char *argv[])
     QObject::connect(captureAction, &QAction::triggered, &controller, &QuickNoteController::NewNoteWithSelection);
 
     QQmlApplicationEngine engine;
+    engine.addImportPath(QStringLiteral("/home/cesar/.local/lib/qt6/qml"));
     KLocalization::setupLocalizedContext(&engine);
     engine.rootContext()->setContextProperty(QStringLiteral("QuickNote"), &controller);
 
@@ -121,6 +128,15 @@ int main(int argc, char *argv[])
                     win->show();
                     win->raise();
                     win->requestActivate();
+                }
+
+                if (parser.isSet(screenshotOpt)) {
+                    const QString outPath = parser.value(screenshotOpt);
+                    QTimer::singleShot(350, win, [win, outPath, &app]() {
+                        const QImage img = win->grabWindow();
+                        img.save(outPath);
+                        app.quit();
+                    });
                 }
             }
         }

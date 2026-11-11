@@ -11,9 +11,13 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QGuiApplication>
+#include <QPainter>
+#include <QPdfWriter>
 #include <QProcess>
 #include <QRegularExpression>
 #include <QStandardPaths>
+#include <QTextDocument>
+#include <QUrl>
 #include <QUuid>
 #include <QVariantMap>
 
@@ -314,6 +318,110 @@ void QuickNoteController::insertQuoteText(const QString &text)
     updated.append(formatted);
     updateCurrentContent(updated);
     setStatusMessage(QStringLiteral("Cita insertada en la nota"));
+}
+
+void QuickNoteController::duplicateCurrentNote()
+{
+    if (m_currentContent.isEmpty()) {
+        createNote(QStringLiteral("# Copia de nota\n\n"));
+        return;
+    }
+    createNote(m_currentContent);
+    setStatusMessage(QStringLiteral("Nota duplicada"));
+}
+
+void QuickNoteController::insertHorizontalDivider()
+{
+    QString updated = m_currentContent;
+    if (!updated.isEmpty() && !updated.endsWith(QLatin1Char('\n'))) {
+        updated.append(QLatin1Char('\n'));
+    }
+    updated.append(QStringLiteral("\n---\n\n"));
+    updateCurrentContent(updated);
+    setStatusMessage(QStringLiteral("Línea divisoria horizontal insertada (Ctrl+L)"));
+}
+
+bool QuickNoteController::importMarkdownFile(const QString &fileUrl)
+{
+    QString localPath = fileUrl.trimmed();
+    if (localPath.startsWith(QLatin1String("file://"))) {
+        localPath = QUrl(localPath).toLocalFile();
+    }
+    if (localPath.isEmpty() || !QFile::exists(localPath)) {
+        setStatusMessage(QStringLiteral("Archivo Markdown no encontrado"));
+        return false;
+    }
+
+    QFile file(localPath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        setStatusMessage(QStringLiteral("No se pudo leer el archivo Markdown"));
+        return false;
+    }
+
+    const QString mdContent = QString::fromUtf8(file.readAll());
+    file.close();
+
+    createNote(mdContent);
+    setStatusMessage(QStringLiteral("Markdown importado: %1").arg(QFileInfo(localPath).fileName()));
+    return true;
+}
+
+bool QuickNoteController::exportToMarkdown(const QString &destUrl)
+{
+    QString localPath = destUrl.trimmed();
+    if (localPath.startsWith(QLatin1String("file://"))) {
+        localPath = QUrl(localPath).toLocalFile();
+    }
+    if (localPath.isEmpty()) {
+        return false;
+    }
+    if (!localPath.endsWith(QLatin1String(".md"), Qt::CaseInsensitive)) {
+        localPath += QStringLiteral(".md");
+    }
+
+    QFile outFile(localPath);
+    if (!outFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+        setStatusMessage(QStringLiteral("Error al exportar archivo Markdown"));
+        return false;
+    }
+
+    outFile.write(m_currentContent.toUtf8());
+    outFile.close();
+    setStatusMessage(QStringLiteral("Exportado a Markdown: %1").arg(QFileInfo(localPath).fileName()));
+    return true;
+}
+
+bool QuickNoteController::exportToPdf(const QString &destUrl)
+{
+    QString localPath = destUrl.trimmed();
+    if (localPath.startsWith(QLatin1String("file://"))) {
+        localPath = QUrl(localPath).toLocalFile();
+    }
+    if (localPath.isEmpty()) {
+        return false;
+    }
+    if (!localPath.endsWith(QLatin1String(".pdf"), Qt::CaseInsensitive)) {
+        localPath += QStringLiteral(".pdf");
+    }
+
+    QPdfWriter pdfWriter(localPath);
+    pdfWriter.setPageSize(QPageSize(QPageSize::A4));
+    pdfWriter.setResolution(300);
+    pdfWriter.setTitle(m_currentTitle);
+
+    QTextDocument doc;
+    doc.setMarkdown(m_currentContent);
+
+    QPainter painter(&pdfWriter);
+    if (!painter.isActive()) {
+        setStatusMessage(QStringLiteral("Error al inicializar exportación PDF"));
+        return false;
+    }
+    doc.drawContents(&painter);
+    painter.end();
+
+    setStatusMessage(QStringLiteral("Exportado a PDF: %1").arg(QFileInfo(localPath).fileName()));
+    return QFileInfo::exists(localPath) && QFileInfo(localPath).size() > 0;
 }
 
 bool QuickNoteController::syncToKiriKnowledge()

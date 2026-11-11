@@ -53,8 +53,13 @@ public:
     Q_INVOKABLE void selectNote(const QString &id);
     Q_INVOKABLE void updateCurrentContent(const QString &content);
     Q_INVOKABLE void deleteNote(const QString &id);
+    Q_INVOKABLE void duplicateCurrentNote();
     Q_INVOKABLE void insertClipboardQuote();
     Q_INVOKABLE void insertQuoteText(const QString &text);
+    Q_INVOKABLE void insertHorizontalDivider();
+    Q_INVOKABLE bool importMarkdownFile(const QString &fileUrl);
+    Q_INVOKABLE bool exportToMarkdown(const QString &destUrl);
+    Q_INVOKABLE bool exportToPdf(const QString &destUrl);
     Q_INVOKABLE bool syncToKiriKnowledge();
     Q_INVOKABLE void toggleVisible();
     Q_INVOKABLE void showOverlay();
