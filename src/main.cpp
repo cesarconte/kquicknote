@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     app.setApplicationDisplayName(QStringLiteral("KQuickNote"));
     app.setOrganizationDomain(QStringLiteral("cesar.org"));
     app.setQuitOnLastWindowClosed(false);
-    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("accessories-text-editor"), QIcon::fromTheme(QStringLiteral("document-edit"))));
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("org.cesar.kquicknote"), QIcon::fromTheme(QStringLiteral("knotes"))));
 
     QCommandLineParser parser;
     parser.setApplicationDescription(QStringLiteral("KQuickNote — Nota Rápida con Esquina Activa para KDE Plasma 6 Wayland"));
