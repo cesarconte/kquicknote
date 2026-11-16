@@ -367,7 +367,7 @@ CachyWindow {
                 tooltipText: i18n("Sincronizar nota con la base de conocimiento de Kity AI")
                 onClicked: {
                     if (typeof QuickNote !== "undefined" && QuickNote) {
-                        QuickNote.syncToKiriKnowledge();
+                        QuickNote.syncToKityKnowledge();
                     }
                 }
             }

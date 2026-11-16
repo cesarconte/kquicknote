@@ -1,6 +1,6 @@
 # KQuickNote — Nota Rápida para KDE Plasma 6.8 + Wayland
 
-**KQuickNote** ofrece una experiencia ágil de notas rápidas de forma nativa en **KDE Plasma 6.8 sobre Wayland** con diseño **Kirigami / Breeze** e integración directa con el índice de conocimiento local (**RAG**) de **Kiri**.
+**KQuickNote** ofrece una experiencia ágil de notas rápidas de forma nativa en **KDE Plasma 6.8 sobre Wayland** con diseño **Kirigami / Breeze** e integración directa con el índice de conocimiento local (**RAG**) de **Kity**.
 
 ---
 
@@ -14,8 +14,8 @@
   - Selector rápido de notas recientes, creación de nuevas notas y eliminación segura.
 - **Captura de selección / portapapeles Wayland como cita (`> ...`)**:
   - Captura la selección primaria de Wayland o el portapapeles (`QClipboard` / `wl-paste`) y la añade al documento actual formateada como bloque de cita Markdown.
-- **Sincronización en un clic con Kiri Local RAG**:
-  - Exporta la nota activa a `~/.local/share/kiri/knowledge/quicknote-<id>.md` para que el asistente local **Kiri** pueda consultarla inmediatamente.
+- **Sincronización en un clic con Kity Local RAG**:
+  - Exporta la nota activa a `~/.local/share/kity/knowledge/quicknote-<id>.md` para que el asistente local **Kity** pueda consultarla inmediatamente.
 - **Atajos globales (`KF6::GlobalAccel`) y servicio D-Bus (`org.cesar.kquicknote`)**:
   - `Meta+Alt+N`: Mostrar / ocultar la Nota Rápida.
   - `Meta+Shift+N`: Crear nueva nota rápida capturando la selección actual.

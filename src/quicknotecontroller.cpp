@@ -39,7 +39,7 @@ QuickNoteController::QuickNoteController(const QString &notesDir, QObject *paren
     }
 
     const QString genericData = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
-    m_kiriKnowledgeDir = genericData + QStringLiteral("/kiri/knowledge");
+    m_kiriKnowledgeDir = genericData + QStringLiteral("/kity/knowledge");
 
     QDir().mkpath(m_notesDir);
     loadNotesIndex();
@@ -143,12 +143,12 @@ QString QuickNoteController::notesDir() const
     return m_notesDir;
 }
 
-QString QuickNoteController::kiriKnowledgeDir() const
+QString QuickNoteController::kityKnowledgeDir() const
 {
     return m_kiriKnowledgeDir;
 }
 
-void QuickNoteController::setKiriKnowledgeDir(const QString &dir)
+void QuickNoteController::setKityKnowledgeDir(const QString &dir)
 {
     m_kiriKnowledgeDir = dir;
 }
@@ -424,7 +424,7 @@ bool QuickNoteController::exportToPdf(const QString &destUrl)
     return QFileInfo::exists(localPath) && QFileInfo(localPath).size() > 0;
 }
 
-bool QuickNoteController::syncToKiriKnowledge()
+bool QuickNoteController::syncToKityKnowledge()
 {
     if (m_currentNoteId.isEmpty()) {
         setStatusMessage(QStringLiteral("No hay ninguna nota activa para sincronizar"));
@@ -432,7 +432,7 @@ bool QuickNoteController::syncToKiriKnowledge()
     }
 
     if (!QDir().mkpath(m_kiriKnowledgeDir)) {
-        setStatusMessage(QStringLiteral("No se pudo crear el directorio de Kiri RAG"));
+        setStatusMessage(QStringLiteral("No se pudo crear el directorio de Kity RAG"));
         return false;
     }
 
@@ -440,14 +440,14 @@ bool QuickNoteController::syncToKiriKnowledge()
                                    .filePath(QStringLiteral("quicknote-%1.md").arg(m_currentNoteId));
     QFile outFile(targetPath);
     if (!outFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
-        setStatusMessage(QStringLiteral("Error al exportar a Kiri RAG"));
+        setStatusMessage(QStringLiteral("Error al exportar a Kity RAG"));
         return false;
     }
 
     outFile.write(m_currentContent.toUtf8());
     outFile.close();
 
-    setStatusMessage(QStringLiteral("Sincronizado con Kiri RAG"));
+    setStatusMessage(QStringLiteral("Sincronizado con Kity RAG"));
     return true;
 }
 

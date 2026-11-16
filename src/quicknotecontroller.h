@@ -43,8 +43,10 @@ public:
     int wordCount() const;
 
     QString notesDir() const;
-    QString kiriKnowledgeDir() const;
-    void setKiriKnowledgeDir(const QString &dir);
+    QString kityKnowledgeDir() const;
+    void setKityKnowledgeDir(const QString &dir);
+    QString kiriKnowledgeDir() const { return kityKnowledgeDir(); }
+    void setKiriKnowledgeDir(const QString &dir) { setKityKnowledgeDir(dir); }
 
     static QString deriveTitle(const QString &content);
     static QString formatAsBlockquote(const QString &rawText);
@@ -60,7 +62,8 @@ public:
     Q_INVOKABLE bool importMarkdownFile(const QString &fileUrl);
     Q_INVOKABLE bool exportToMarkdown(const QString &destUrl);
     Q_INVOKABLE bool exportToPdf(const QString &destUrl);
-    Q_INVOKABLE bool syncToKiriKnowledge();
+    Q_INVOKABLE bool syncToKityKnowledge();
+    Q_INVOKABLE bool syncToKiriKnowledge() { return syncToKityKnowledge(); }
     Q_INVOKABLE void toggleVisible();
     Q_INVOKABLE void showOverlay();
     Q_INVOKABLE void hideOverlay();
