@@ -93,6 +93,7 @@ int main(int argc, char *argv[])
     QObject::connect(captureAction, &QAction::triggered, &controller, &QuickNoteController::NewNoteWithSelection);
 
     QQmlApplicationEngine engine;
+    engine.addImportPath(QStringLiteral("/usr/lib/qt6/qml"));
     engine.addImportPath(QStringLiteral("/home/cesar/.local/lib/qt6/qml"));
     KLocalization::setupLocalizedContext(&engine);
     engine.rootContext()->setContextProperty(QStringLiteral("QuickNote"), &controller);

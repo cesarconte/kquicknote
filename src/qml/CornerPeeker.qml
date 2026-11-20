@@ -3,10 +3,12 @@
     SPDX-License-Identifier: GPL-3.0-or-later
 */
 
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls as QQC2
 import org.kde.layershell as LayerShell
-import org.kde.kirigami as Kirigami
+import CachyOS.UI
 
 Window {
     id: peekerWindow
@@ -88,17 +90,17 @@ Window {
             }
 
             // Liquid Glass styling
-            color: Kirigami.ColorUtils.tintWithAlpha(Kirigami.Theme.backgroundColor, Kirigami.Theme.highlightColor, 0.15)
+            color: CachyTheme.withAlpha(CachyTheme.accentColor, 0.15)
             border.width: 1.5
-            border.color: peekerWindow.isExpanded ? Kirigami.Theme.highlightColor : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.25)
+            border.color: peekerWindow.isExpanded ? CachyTheme.accentColor : CachyPalette.specularBorder
 
             // Inner Note Icon
-            Kirigami.Icon {
+            CachyIcon {
                 anchors.centerIn: parent
-                source: "document-edit-symbolic"
-                implicitWidth: 22
-                implicitHeight: 22
-                color: peekerWindow.isExpanded ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
+                name: "document-edit-symbolic"
+                fallback: "document-edit"
+                size: 22
+                color: peekerWindow.isExpanded ? CachyTheme.accentColor : CachyPalette.text
             }
 
             // Dog-ear folded corner indicator (macOS Notes style)
@@ -107,7 +109,7 @@ Window {
                 anchors.right: parent.right
                 width: 10
                 height: 10
-                color: Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.2)
+                color: CachyTheme.withAlpha(CachyPalette.text, 0.2)
                 radius: 2
                 visible: peekerWindow.isExpanded
             }

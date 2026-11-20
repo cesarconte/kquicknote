@@ -9,7 +9,6 @@ import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import QtQuick.Dialogs as QtDialogs
-import org.kde.kirigami as Kirigami
 import CachyOS.UI
 
 CachyWindow {
@@ -29,11 +28,10 @@ CachyWindow {
     showTrafficLights: true
     showTitleBarDivider: true
     showWindowFrame: true
-    sidebarVisible: root.showSidebar
-    sidebarWidth: 216
+    sidebarVisible: true
+    sidebarWidthExpanded: 216
     cornerRadius: CachyTheme.radiusWindow
 
-    property bool showSidebar: true
     property bool richPreviewMode: false
 
     onClosing: function(close) {
@@ -119,7 +117,7 @@ CachyWindow {
             anchors.verticalCenter: parent.verticalCenter
 
             CachyToolbarButton {
-                text: "✎"
+                iconName: "document-edit"
                 tooltipText: i18n("Nueva nota (Ctrl+N)")
                 onClicked: {
                     if (typeof QuickNote !== "undefined" && QuickNote) {
@@ -238,13 +236,12 @@ CachyWindow {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 6
 
-            CachyToolbarButton {
-                text: "☰"
-                tooltipText: i18n("Mostrar/ocultar barra lateral de notas")
-                onClicked: root.showSidebar = !root.showSidebar
+            CachySidebarToggleButton {
+                targetWindow: root
+                visible: true
             }
 
-            // Golden Gate "File" Menu (Exact replica of 15_notes.png — "Less iconic" clean menu)
+            // Golden Gate "File" Menu (macOS Golden Gate clean menu)
             CachyToolbarButton {
                 id: fileMenuBtn
                 text: i18n("File ▾")
@@ -252,11 +249,13 @@ CachyWindow {
                 tooltipText: i18n("Menú Archivo (Importar/Exportar Markdown y PDF)")
                 onClicked: goldenGateFileMenu.popup(0, fileMenuBtn.height + 4)
 
-                QQC2.Menu {
+                CachyMenu {
                     id: goldenGateFileMenu
 
-                    QQC2.MenuItem {
-                        text: i18n("New Note\t⌘N")
+                    CachyMenuItem {
+                        text: i18n("New Note")
+                        shortcutText: "⌘N"
+                        iconName: "document-edit"
                         onTriggered: {
                             if (typeof QuickNote !== "undefined" && QuickNote) {
                                 QuickNote.createNote("# Nueva nota\n\n");
@@ -265,33 +264,35 @@ CachyWindow {
                         }
                     }
 
-                    QQC2.MenuSeparator {}
+                    CachyMenuSeparator {}
 
-                    QQC2.MenuItem {
+                    CachyMenuItem {
                         text: i18n("Import Markdown…")
+                        iconName: "document-import"
                         onTriggered: importMdDialog.open()
                     }
 
-                    QQC2.Menu {
-                        title: i18n("Export To")
-
-                        QQC2.MenuItem {
-                            text: i18n("PDF")
-                            onTriggered: exportPdfDialog.open()
-                        }
-
-                        QQC2.MenuItem {
-                            text: i18n("Markdown")
-                            onTriggered: exportMdDialog.open()
-                        }
+                    CachyMenuItem {
+                        text: i18n("Export To PDF…")
+                        iconName: "application-pdf"
+                        onTriggered: exportPdfDialog.open()
                     }
 
-                    QQC2.MenuSeparator {}
+                    CachyMenuItem {
+                        text: i18n("Export To Markdown…")
+                        iconName: "text-markdown"
+                        onTriggered: exportMdDialog.open()
+                    }
 
-                    QQC2.MenuItem {
+                    CachyMenuSeparator {}
+
+                    CachyMenuItem {
                         text: typeof QuickNote !== "undefined" && QuickNote && QuickNote.pinned
                             ? i18n("Unpin Note")
                             : i18n("Pin Note")
+                        iconName: (typeof QuickNote !== "undefined" && QuickNote && QuickNote.pinned)
+                            ? "window-unpin"
+                            : "window-pin"
                         onTriggered: {
                             if (typeof QuickNote !== "undefined" && QuickNote) {
                                 QuickNote.pinned = !QuickNote.pinned;
@@ -299,8 +300,10 @@ CachyWindow {
                         }
                     }
 
-                    QQC2.MenuItem {
-                        text: i18n("Duplicate Note\t⌘D")
+                    CachyMenuItem {
+                        text: i18n("Duplicate Note")
+                        shortcutText: "⌘D"
+                        iconName: "edit-copy"
                         onTriggered: {
                             if (typeof QuickNote !== "undefined" && QuickNote) {
                                 QuickNote.duplicateCurrentNote();
@@ -308,10 +311,12 @@ CachyWindow {
                         }
                     }
 
-                    QQC2.MenuSeparator {}
+                    CachyMenuSeparator {}
 
-                    QQC2.MenuItem {
+                    CachyMenuItem {
                         text: i18n("Delete Note")
+                        iconName: "edit-delete"
+                        destructive: true
                         onTriggered: {
                             if (typeof QuickNote !== "undefined" && QuickNote) {
                                 QuickNote.deleteNote(QuickNote.currentNoteId);
@@ -323,7 +328,7 @@ CachyWindow {
 
             // Golden Gate Horizontal Divider Line (Ctrl+L)
             CachyToolbarButton {
-                text: "―"
+                iconName: "draw-line"
                 tooltipText: i18n("Insertar línea divisoria horizontal (Ctrl+L)")
                 onClicked: {
                     if (typeof QuickNote !== "undefined" && QuickNote) {
@@ -334,7 +339,7 @@ CachyWindow {
 
             // Insert Clipboard Quote
             CachyToolbarButton {
-                text: "❝"
+                iconName: "format-text-blockquote"
                 tooltipText: i18n("Insertar selección o portapapeles como cita (> ...)")
                 onClicked: {
                     if (typeof QuickNote !== "undefined" && QuickNote) {
@@ -352,7 +357,7 @@ CachyWindow {
 
             // Toggle Rich Formatted View vs Markdown Source
             CachyToolbarButton {
-                text: root.richPreviewMode ? "MD" : "👁"
+                iconName: root.richPreviewMode ? "document-edit" : "view-preview"
                 checkable: true
                 checked: root.richPreviewMode
                 tooltipText: root.richPreviewMode
@@ -363,7 +368,7 @@ CachyWindow {
 
             // Sync to Kity RAG Knowledge Base
             CachyToolbarButton {
-                text: "✦"
+                iconName: "kity-symbolic"
                 tooltipText: i18n("Sincronizar nota con la base de conocimiento de Kity AI")
                 onClicked: {
                     if (typeof QuickNote !== "undefined" && QuickNote) {
@@ -374,9 +379,9 @@ CachyWindow {
 
             // Pin Window
             CachyToolbarButton {
-                text: "📌"
+                iconName: (typeof QuickNote !== "undefined" && QuickNote && QuickNote.pinned) ? "window-unpin" : "window-pin"
                 checkable: true
-                checked: typeof QuickNote !== "undefined" && QuickNote ? QuickNote.pinned : true
+                checked: typeof QuickNote !== "undefined" && QuickNote ? QuickNote.pinned : false
                 tooltipText: i18n("Fijar nota en primer plano")
                 onClicked: {
                     if (typeof QuickNote !== "undefined" && QuickNote) {
